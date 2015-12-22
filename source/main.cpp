@@ -14,13 +14,27 @@
 
 #include <ht_debug.h>
 #include <ht_version.h>
+#include <ht_file.h>
+
+using namespace Hatchit;
+using namespace Hatchit::Core;
 
 int main(int argc, char* argv[])
 {
-    Hatchit::Core::DebugPrintF("Hatchit Engine: v%d.%d.%d\n",
+    DebugPrintF("Hatchit Engine: v%d.%d.%d\n",
                                 HatchitEngine_VERSION_MAJOR,
                                 HatchitEngine_VERSION_MINOR,
                                 HatchitEngine_VERSION_BUILD);
+
+    File file;
+    try
+    {
+        file.Open("tet.txt", FileMode::ReadText);
+    }
+    catch (FileException& e)
+    {
+        DebugPrintF("%s\n", e.what());
+    }
 
     return 0;
 }
