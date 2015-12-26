@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
         INIWriter writer;
         writer.SetValue("CHARACTER", "iStrength", 600);
         writer.SetValue("CHARACTER", "bCanSwim", true);
-        writer.SetValue("CHARACTER", "fScale", 2.5);
+        writer.SetValue("CHARACTER", "fScale", 2.5f);
         writer.SetValue("CHARACTER", "dHealth", 35.5);
         
         writer.Write(&file);
