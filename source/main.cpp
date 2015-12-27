@@ -12,10 +12,31 @@
 **
 **/
 
+
+#include <ht_application.h>
+#include <ht_debug.h>
+#include <HatchitTest.h>
+using namespace Hatchit;
+using namespace Hatchit::Core;
+using namespace Hatchit::Game;
+
 int main(int argc, char* argv[])
 {
+    INIReader settings;
+
+    File file;
+    try
+    {
+        file.Open("HatchitTest.ini", FileMode::ReadText);
+        settings.Load(&file);
+    }
+    catch (std::exception& e)
+    {
+        DebugPrintF("No .ini file found for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
+    }
+
+    Application app(&settings);
 
 
-
-    return 0;
+    return app.Run();
 }
