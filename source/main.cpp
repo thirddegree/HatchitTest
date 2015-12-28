@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
     }
     catch (std::exception& e)
     {
+        DebugPrintF("%s\n", e.what());
         DebugPrintF("No .ini file found for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
     }
 
