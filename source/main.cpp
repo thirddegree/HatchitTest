@@ -16,6 +16,7 @@
 #include <ht_application.h>
 #include <ht_debug.h>
 #include <HatchitTest.h>
+
 using namespace Hatchit;
 using namespace Hatchit::Core;
 using namespace Hatchit::Game;
@@ -32,8 +33,10 @@ int main(int argc, char* argv[])
     }
     catch (std::exception& e)
     {
+#ifdef _DEBUG
         DebugPrintF("%s\n", e.what());
         DebugPrintF("No .ini file found for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
+#endif
     }
 
     Application app(&settings);
