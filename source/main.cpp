@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     Bitmap* bitmap;
     try
     {
-        file.Open(os_exec_dir() + "img_mars.jpg", FileMode::ReadBinary);
+        file.Open(os_exec_dir() + "croissant.png", FileMode::ReadBinary);
 
         bitmap = Bitmap::Load(&file, Bitmap::Channels::RedGreenBlueAlpha);
 
