@@ -15,33 +15,32 @@
 
 #include <ht_application.h>
 #include <ht_debug.h>
-#include <ht_bitmap.h>
 #include <HatchitTest.h>
 
 using namespace Hatchit;
 using namespace Hatchit::Core;
-using namespace Hatchit::Image;
 using namespace Hatchit::Game;
 
 int main(int argc, char* argv[])
 {
+    INIReader settings;
+
     File file;
-    Bitmap* bitmap;
     try
     {
-        file.Open(os_exec_dir() + "img_mars.jpg", FileMode::ReadBinary);
-
-        bitmap = Bitmap::Load(&file, Bitmap::Channels::RedGreenBlueAlpha);
-
-        DebugPrintF("%d %d %d\n", bitmap->GetWidth(), bitmap->GetHeight(), bitmap->GetChannels());
+        file.Open(os_exec_dir() + "HatchitTest.ini", FileMode::ReadText);
+        settings.Load(&file);
     }
     catch (std::exception& e)
     {
 #ifdef _DEBUG
         DebugPrintF("%s\n", e.what());
+        DebugPrintF("No .ini file found for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
 #endif
     }
 
+    Application app(&settings);
 
-    return 0;
+
+    return app.Run();
 }
