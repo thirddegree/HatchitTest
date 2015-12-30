@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     {
         file.Open(os_exec_dir() + "croissant.png", FileMode::ReadBinary);
 
-        bitmap = Bitmap::Load(&file, Bitmap::Channels::RedGreenBlueAlpha);
+        bitmap = Bitmap::Load(&file, Bitmap::Channels::RGBA);
 
         DebugPrintF("%d %d %d\n", bitmap->GetWidth(), bitmap->GetHeight(), bitmap->GetChannels());
     }
