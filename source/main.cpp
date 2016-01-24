@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     {
 #ifdef _DEBUG
         DebugPrintF("%s\n", e.what());
-        DebugPrintF("No .ini file found for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
+        DebugPrintF("Error in loading .ini file for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
 #endif
     }
 
