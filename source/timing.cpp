@@ -15,6 +15,7 @@
 
 #include <ht_application.h>
 #include <ht_debug.h>
+#include <ht_timer.h>
 #include <HatchitTest.h>
 
 using namespace Hatchit;
@@ -23,24 +24,29 @@ using namespace Hatchit::Game;
 
 int main(int argc, char* argv[])
 {
-    INIReader settings;
+    Timer timer;
 
-    File file;
-    try
+    timer.Reset();
+
+    timer.Start();
+
+    for (int i = 0; i < 100000; i++)
     {
-        file.Open(os_exec_dir() + "HatchitTest.ini", FileMode::ReadText);
-        settings.Load(&file);
-    }
-    catch (std::exception& e)
-    {
-#ifdef _DEBUG
-        DebugPrintF("%s\n", e.what());
-        DebugPrintF("No .ini file found for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
-#endif
+        DebugPrintF("%d\n", i);
     }
 
-    Application app(&settings);
+    timer.Stop();
 
+    DebugPrintF("TotalTime: %.2f\n", timer.TotalTime());
 
-    return app.Run();
+    for (int i = 0; i < 100000; i++)
+    {
+        DebugPrintF("%d\n", i);
+    }
+
+    timer.Start();
+
+    DebugPrintF("PausedTime: %.2f\n", timer.PausedTime());
+
+    return 0;
 }
