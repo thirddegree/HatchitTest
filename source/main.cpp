@@ -16,14 +16,26 @@
 #include <ht_application.h>
 #include <ht_debug.h>
 #include <HatchitTest.h>
+#include <ht_file.h>
+#include <ht_socketutil.h>
 
 using namespace Hatchit;
 using namespace Hatchit::Core;
 using namespace Hatchit::Game;
-
+using namespace Hatchit::Network;
 int main(int argc, char* argv[])
 {
-    INIReader settings;
+
+   SocketAddressPtr socket = SocketUtil::CreateIPv4Address("www.google.com");
+   if(socket)
+   {
+       SocketAddress* _socket = socket.get();
+#ifdef _DEBUG
+        DebugPrintF("Socket creation succeded\n");
+#endif
+   }
+
+   /* INIReader settings;
 
     File file;
     try
@@ -42,5 +54,5 @@ int main(int argc, char* argv[])
     Application app(&settings);
 
 
-    return app.Run();
+    return app.Run(); */
 }
