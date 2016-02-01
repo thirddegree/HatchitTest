@@ -28,45 +28,47 @@ int main(int argc, char* argv[])
 {
     DebugPrintF("Client.\n");
 
-    if(argc < 3) {
-        DebugPrintF("usage %s hostname port\n", argv[0]);
-        std::exit(EXIT_FAILURE);
-    }
-
-    uint16_t port = atoi(argv[2]);
-    
-    hostent* _server;
-    _server = gethostbyname(argv[1]);
-    if(!_server) {
+    int result = std::atexit(Network::Shutdown);
+    if (result != 0) {
 #ifdef _DEBUG
-        ReportError("no such host available");
+        DebugPrintF("atexit registration failed.\n");
 #endif
         std::exit(EXIT_FAILURE);
     }
 
-    SocketAddressPtr server = std::make_shared<SocketAddress>(_server, port);
+    Network::Initialize();
+
+    if(argc < 2) {
+        DebugPrintF("usage %s destination:port\n", argv[0]);
+        std::exit(EXIT_FAILURE);
+    }
+
+    SocketAddressPtr server = SocketUtil::CreateIPv4Address(argv[1]);
     
     TCPSocketPtr socket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
 
-    int result = socket->Connect(*server);
-    if(result < 0)
+    result = socket->Connect(*server);
+    if (result < 0) {
         std::exit(EXIT_FAILURE);
-
+    }
+       
     while(true)
     {
         std::string msg;
         DebugPrintF("Please enter a message: ");
         std::getline(std::cin, msg);
+        if (msg.length() <= 0)
+            std::exit(EXIT_FAILURE);
 
         char sbuffer[256] = {0};
         msg.copy(sbuffer, 255);
         int n = socket->Send(sbuffer, 255);
-        if(n < 0)
+        if (n < 0)
             std::exit(EXIT_FAILURE);
 
         char buffer[256] = {0};
         n = socket->Receive(buffer, 255);
-        if(n < 0)
+        if (n < 0)
             std::exit(EXIT_FAILURE);
 
         DebugPrintF("%s\n", buffer);

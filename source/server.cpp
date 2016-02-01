@@ -25,17 +25,26 @@ using namespace Hatchit::Network;
 int main(int argc, char* argv[])
 {
     DebugPrintF("Server.\n");
-    
-    if(argc < 2) {
+
+    int result = std::atexit(Network::Shutdown);
+    if (result != 0) {
 #ifdef _DEBUG
-        DebugPrintF("ERROR: no port provided. Exiting.\n");
+        DebugPrintF("atexit registration failed.\n");
 #endif
+        std::exit(EXIT_FAILURE);
+    }
+
+    Network::Initialize();
+    
+    if (argc < 2) {
+        DebugPrintF("usage %s port\n", argv[0]);
         std::exit(EXIT_FAILURE);
     }
 
     TCPSocketPtr socket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
     
-    SocketAddressPtr address = std::make_shared<SocketAddress>(atoi(argv[1]));
+    int port = atoi(argv[1]);
+    SocketAddressPtr address = std::make_shared<SocketAddress>(port);
 
     socket->Bind(*address);
 
@@ -49,15 +58,15 @@ int main(int argc, char* argv[])
     {
         char buffer[256] = {0};
         int n = clientSocket->Receive(buffer, 255);
-        if(n < 0)
+        if (n < 0 || strlen(buffer) <= 0)
             std::exit(EXIT_FAILURE);
 
         DebugPrintF("Message: %s\n", buffer);
 
         const char* msg = "Server received message";
         n = clientSocket->Send(msg, strlen(msg));
-        if(n < 0)
-            std::exit(EXIT_FAILURE);        
+        if (n < 0)
+            std::exit(EXIT_FAILURE);
     }
  
     return 0;
