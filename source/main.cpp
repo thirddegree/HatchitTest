@@ -26,16 +26,16 @@ using namespace Hatchit::Network;
 int main(int argc, char* argv[])
 {
 
-   SocketAddressPtr socket = SocketUtil::CreateIPv4Address("www.google.com");
-   if(socket)
-   {
-       SocketAddress* _socket = socket.get();
-#ifdef _DEBUG
-        DebugPrintF("Socket creation succeded\n");
-#endif
-   }
+//   SocketAddressPtr socket = SocketUtil::CreateIPv4Address("www.google.com");
+//   if(socket)
+//   {
+//       SocketAddress* _socket = socket.get();
+//#ifdef _DEBUG
+//        DebugPrintF("Socket creation succeded\n");
+//#endif
+//   }
 
-   /* INIReader settings;
+    INIReader settings;
 
     File file;
     try
@@ -54,5 +54,5 @@ int main(int argc, char* argv[])
     Application app(&settings);
 
 
-    return app.Run(); */
+    return app.Run();
 }
