@@ -54,28 +54,30 @@ int main(int argc, char* argv[])
     {
         socket->Listen();
 
-        std::thread t([](TCPSocketPtr& s){
-            SocketAddressPtr client = std::make_shared<SocketAddress>();
+        SocketAddressPtr clientAddress = std::make_shared<SocketAddress>();
+        TCPSocketPtr client = socket->Accept(*clientAddress);
+        if(client)
+        {
+            std::thread t([](TCPSocketPtr s){
 
-            TCPSocketPtr clientSocket = s->Accept(*client);
+                while (true)
+                {
+                    char buffer[256] = { 0 };
+                    int n = s->Receive(buffer, 255);
+                    if (n < 0 || strlen(buffer) <= 0)
+                        std::exit(EXIT_FAILURE);
 
-            while (true)
-            {
-                char buffer[256] = { 0 };
-                int n = clientSocket->Receive(buffer, 255);
-                if (n < 0 || strlen(buffer) <= 0)
-                    std::exit(EXIT_FAILURE);
+                    DebugPrintF("Message: %s\n", buffer);
 
-                DebugPrintF("Message: %s\n", buffer);
+                    const char* msg = "Server received message";
+                    n = s->Send(msg, strlen(msg));
+                    if (n < 0)
+                        std::exit(EXIT_FAILURE);
+                }
 
-                const char* msg = "Server received message";
-                n = clientSocket->Send(msg, strlen(msg));
-                if (n < 0)
-                    std::exit(EXIT_FAILURE);
-            }
-
-        }, std::ref(socket));
-        t.detach();
+            }, client);
+            t.detach();
+        }
     }
    
     return 0;
