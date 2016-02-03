@@ -15,26 +15,15 @@
 
 #include <ht_application.h>
 #include <ht_debug.h>
-#include <HatchitTest.h>
 #include <ht_file.h>
-#include <ht_socketutil.h>
+#include <HatchitTest.h>
 
 using namespace Hatchit;
 using namespace Hatchit::Core;
 using namespace Hatchit::Game;
-using namespace Hatchit::Network;
+
 int main(int argc, char* argv[])
 {
-
-//   SocketAddressPtr socket = SocketUtil::CreateIPv4Address("www.google.com");
-//   if(socket)
-//   {
-//       SocketAddress* _socket = socket.get();
-//#ifdef _DEBUG
-//        DebugPrintF("Socket creation succeded\n");
-//#endif
-//   }
-
     INIReader settings;
 
     File file;
