@@ -17,6 +17,8 @@
 #include <ht_debug.h>
 #include <ht_file.h>
 #include <HatchitTest.h>
+#include <ht_model.h>
+#include <thread>
 
 using namespace Hatchit;
 using namespace Hatchit::Core;
@@ -24,6 +26,36 @@ using namespace Hatchit::Game;
 
 int main(int argc, char* argv[])
 {
+    const char* names[4] =
+    {
+        "Raptor.obj",
+        "floor.obj",
+        "monkey.obj",
+        "test_dragon.dae"
+    };
+    std::thread t([](const char* fileNames[4]) {
+        for (int i = 0; i < 4; i++)
+        {
+            File file;
+            try
+            {
+                file.Open(os_exec_dir() + fileNames[i], FileMode::ReadText);
+
+                Resource::Model model;
+                model.VInitFromFile(&file);
+            }
+            catch (std::exception& e)
+            {
+#ifdef _DEBUG
+                DebugPrintF("%s\n", e.what());
+#endif
+            }
+
+        }
+
+    }, names);
+    t.detach();
+
     INIReader settings;
 
     File file;
