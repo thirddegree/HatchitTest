@@ -24,6 +24,8 @@ using namespace Hatchit;
 using namespace Hatchit::Core;
 using namespace Hatchit::Game;
 
+typedef std::shared_ptr<Resource::Model> ModelPtr;
+
 int main(int argc, char* argv[])
 {
     const char* names[4] =
@@ -33,7 +35,10 @@ int main(int argc, char* argv[])
         "monkey.obj",
         "test_dragon.dae"
     };
-    std::thread t([](const char* fileNames[4]) {
+    std::vector<ModelPtr> _Models;
+    for (int i = 0; i < 4; i++)
+        _Models.push_back(std::make_shared<Resource::Model>());
+    std::thread t([](const char* fileNames[4], std::vector<ModelPtr>& models) {
         for (int i = 0; i < 4; i++)
         {
             File file;
@@ -41,8 +46,7 @@ int main(int argc, char* argv[])
             {
                 file.Open(os_exec_dir() + fileNames[i], FileMode::ReadText);
 
-                Resource::Model model;
-                model.VInitFromFile(&file);
+                models[i]->VInitFromFile(&file);
             }
             catch (std::exception& e)
             {
@@ -53,8 +57,8 @@ int main(int argc, char* argv[])
 
         }
 
-    }, names);
-    t.detach();
+    }, names, std::ref(_Models));
+    t.join();
 
     INIReader settings;
 
