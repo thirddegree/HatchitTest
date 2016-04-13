@@ -17,6 +17,7 @@
 #include <ht_debug.h>
 #include <ht_file.h>
 #include <HatchitTest.h>
+#include <ht_os.h>
 
 using namespace Hatchit;
 using namespace Hatchit::Core;
