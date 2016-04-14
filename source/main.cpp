@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     File file;
     try
     {
-        file.Open(os_exec_dir() + "HatchitTest.ini", FileMode::ReadText);
+        file.Open(os_exec_dir() + "HatchitTest.ini", File::FileMode::ReadText);
         settings.Load(&file);
     }
     catch (std::exception& e)
