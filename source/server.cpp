@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
                     DebugPrintF("Message: %s\n", buffer);
 
                     const char* msg = "Server received message";
-                    n = s->Send(msg, strlen(msg));
+                    n = s->Send(msg, static_cast<int>(strlen(msg)));
                     if (n < 0)
                         std::exit(EXIT_FAILURE);
                 }

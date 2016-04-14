@@ -12,6 +12,8 @@
 **
 **/
 
+#define _SCL_SECURE_NO_WARNINGS
+
 #include <ht_network.h>
 #include <ht_debug.h>
 #include <ht_socketaddress.h>
@@ -61,7 +63,7 @@ int main(int argc, char* argv[])
             std::exit(EXIT_FAILURE);
 
         char sbuffer[256] = {0};
-        msg.copy(sbuffer, 255);
+        msg.copy(sbuffer, static_cast<size_t>(255));
         int n = socket->Send(sbuffer, 255);
         if (n < 0)
             std::exit(EXIT_FAILURE);
