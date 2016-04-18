@@ -28,12 +28,12 @@ using namespace Hatchit::Network;
 
 int main(int argc, char* argv[])
 {
-    DebugPrintF("Client.\n");
+    HT_DEBUG_PRINTF("Client.\n");
 
     int result = std::atexit(Network::Shutdown);
     if (result != 0) {
 #ifdef _DEBUG
-        DebugPrintF("atexit registration failed.\n");
+        HT_DEBUG_PRINTF("atexit registration failed.\n");
 #endif
         std::exit(EXIT_FAILURE);
     }
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     Network::Initialize();
 
     if(argc < 2) {
-        DebugPrintF("usage %s destination:port\n", argv[0]);
+        HT_DEBUG_PRINTF("usage %s destination:port\n", argv[0]);
         std::exit(EXIT_FAILURE);
     }
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
     while(true)
     {
         std::string msg;
-        DebugPrintF("Please enter a message: ");
+        HT_DEBUG_PRINTF("Please enter a message: ");
         std::getline(std::cin, msg);
         if (msg.length() <= 0)
             std::exit(EXIT_FAILURE);
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
         if (n < 0)
             std::exit(EXIT_FAILURE);
 
-        DebugPrintF("%s\n", buffer);
+        HT_DEBUG_PRINTF("%s\n", buffer);
     }
 
     return 0;

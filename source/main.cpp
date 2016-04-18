@@ -35,10 +35,8 @@ int main(int argc, char* argv[])
     }
     catch (std::exception& e)
     {
-#ifdef _DEBUG
-        DebugPrintF("%s\n", e.what());
-        DebugPrintF("Error in loading .ini file for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
-#endif
+        HT_ERROR_PRINTF("%s\n", e.what());
+        HT_ERROR_PRINTF("Error in loading .ini file for: %s\nUsing defaults.\n", HT_SFY_(HatchitTest_TITLE));
     }
 
     Application app(&settings);
