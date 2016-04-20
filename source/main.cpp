@@ -25,7 +25,7 @@ using namespace Hatchit::Game;
 
 int main(int argc, char* argv[])
 {
-    INIReader settings;
+    INISettings settings;
 
     File file;
     try
