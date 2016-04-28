@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     try
     {
         file.Open(os_exec_dir() + "HatchitTest.ini", File::FileMode::ReadText);
-        settings.Load(&file);
+        settings.Load(file);
     }
     catch (std::exception& e)
     {
