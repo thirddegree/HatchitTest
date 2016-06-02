@@ -1,6 +1,6 @@
 /**
 **    Hatchit Engine
-**    Copyright(c) 2015 Third-Degree
+**    Copyright(c) 2015-2016 Third-Degree
 **
 **    GNU Lesser General Public License
 **    This file may be used under the terms of the GNU Lesser
@@ -18,13 +18,30 @@
 #include <ht_file.h>
 #include <HatchitTest.h>
 #include <ht_os.h>
+#include <ht_http.h>
 
 using namespace Hatchit;
 using namespace Hatchit::Core;
 using namespace Hatchit::Game;
+using namespace Hatchit::Network;
 
 int main(int argc, char* argv[])
 {
+    bool success = Network::Initialize();
+    if (!success)
+    {
+        HT_ERROR_PRINTF("Failed to initialize Network subsystem\n");
+    }
+    else
+    {
+        HTTPResponse response;
+        success = HTTP::GET("http://catfacts-api.appspot.com/api/facts", response);
+        if (success)
+            HT_DEBUG_PRINTF(response.GetBody());
+        else
+            HT_ERROR_PRINTF("Failed to get cat facts :(\n");
+    }
+
     INISettings settings;
 
     File file;
