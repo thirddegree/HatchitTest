@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_executable(RunCoreTests FormatTest.cpp
+add_executable(RunCoreTests
                             INITest.cpp
                             JsonTest.cpp
                             OSTest.cpp)
