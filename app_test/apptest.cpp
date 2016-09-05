@@ -12,10 +12,23 @@
 **
 **/
 
-#include <cstdio>
+#include <ht_vkapplication.h>
+#include <ht_vkdevice.h>
+#include <ht_debug.h>
+
+using namespace Hatchit::Graphics;
 
 int main(int argc, char* argv[])
 {
+    Vulkan::VKApplication app;
+    
+    app.Initialize();
+    
+    if (app.IsValid())
+    {
+        Vulkan::VKDevice device;
+        device.Initialize(app, 0);
+    }
 
     return 0;
 }
