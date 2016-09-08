@@ -38,13 +38,14 @@ int main(int argc, char* argv[])
     wp.displayMouse = false;
     wp.title = "Application Test";
 
-    GLFWWindow* window = new GLFWWindow(wp);
-    if (!window->VInitialize())
+    VKApplication app;
+    if (!app.Initialize())
         return -1;
 
-    VKApplication app;
-    if (!app.Initialize(window->VNativeWindowHandle(), window->VNativeDisplayHandle()))
+    GLFWWindow* window = new GLFWWindow(wp);
+    if (!window->Initialize(app))
         return -1;
+    
 
     VKDevice device;
     if (!device.Initialize(app, 0))
@@ -56,9 +57,9 @@ int main(int argc, char* argv[])
 
     
 
-    while (window->VIsRunning())
+    while (window->IsRunning())
     {
-        window->VPollEvents();
+        window->PollEvents();
     }
 
     Input::DeInitialize();
