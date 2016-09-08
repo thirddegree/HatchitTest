@@ -14,21 +14,54 @@
 
 #include <ht_vkapplication.h>
 #include <ht_vkdevice.h>
+#include <ht_vkswapchain.h>
+
+#include <ht_glfwwindow.h>
+#include <ht_input_singleton.h>
 #include <ht_debug.h>
 
 using namespace Hatchit::Graphics;
+using namespace Hatchit::Graphics::Vulkan;
+using namespace Hatchit::Game;
 
 int main(int argc, char* argv[])
 {
-    Vulkan::VKApplication app;
+    Input::Initialize();
+
+    WindowParams wp = {};
+    wp.x = 0;
+    wp.y = 0;
+    wp.width = 800;
+    wp.height = 600;
+    wp.debugWindowEvents = false;
+    wp.displayFPS = false;
+    wp.displayMouse = false;
+    wp.title = "Application Test";
+
+    GLFWWindow* window = new GLFWWindow(wp);
+    if (!window->VInitialize())
+        return -1;
+
+    VKApplication app;
+    if (!app.Initialize(window->VNativeWindowHandle(), window->VNativeDisplayHandle()))
+        return -1;
+
+    VKDevice device;
+    if (!device.Initialize(app, 0))
+        return -1;
+
+    VKSwapChain swapChain;
+    if (!swapChain.Initialize(app, device))
+        return -1;
+
     
-    app.Initialize();
-    
-    if (app.IsValid())
+
+    while (window->VIsRunning())
     {
-        Vulkan::VKDevice device;
-        device.Initialize(app, 0);
+        window->VPollEvents();
     }
+
+    Input::DeInitialize();
 
     return 0;
 }
