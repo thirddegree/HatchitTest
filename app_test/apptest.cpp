@@ -15,6 +15,8 @@
 #include <ht_vkapplication.h>
 #include <ht_vkdevice.h>
 #include <ht_vkswapchain.h>
+#include <ht_vkcommandpool.h>
+#include <ht_vkcommandbuffer.h>
 
 #include <ht_glfwwindow.h>
 #include <ht_input_singleton.h>
@@ -38,15 +40,14 @@ int main(int argc, char* argv[])
     wp.displayMouse = false;
     wp.title = "Application Test";
 
-    VKApplication app;
-    if (!app.Initialize())
+    GLFWWindow* window = new GLFWWindow(wp);
+    if (!window->Initialize())
         return -1;
 
-    GLFWWindow* window = new GLFWWindow(wp);
-    if (!window->Initialize(app))
+    VKApplication app;
+    if (!app.Initialize(window->NativeWindowHandle(), window->NativeDisplayHandle()))
         return -1;
     
-
     VKDevice device;
     if (!device.Initialize(app, 0))
         return -1;
@@ -55,7 +56,27 @@ int main(int argc, char* argv[])
     if (!swapChain.Initialize(app, device))
         return -1;
 
-    
+    VKCommandPool pool;
+    if (!pool.Initialize(device, swapChain.QueueFamilyIndex()))
+        return -1;
+
+    /**
+    * Create Vulkan setup command buffer
+    */
+    VKCommandBuffer setupCommandBuffer;
+    pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1, &setupCommandBuffer);
+
+    VkCommandBufferBeginInfo bInfo = {};
+    bInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    setupCommandBuffer.Begin(&bInfo);
+
+    /**
+    * TEST:
+    *       Create a basic depth stencil buffer
+    */
+
+
+    setupCommandBuffer.End();
 
     while (window->IsRunning())
     {
