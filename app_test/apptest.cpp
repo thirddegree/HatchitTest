@@ -28,6 +28,14 @@ using namespace Hatchit::Game;
 
 int main(int argc, char* argv[])
 {
+    char test = 'B';
+    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID('Bob'));
+    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Jim"));
+    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Sally"));
+    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Bob"));
+    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Sally"));
+    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Jim"));
+
     Input::Initialize();
 
     WindowParams wp = {};
