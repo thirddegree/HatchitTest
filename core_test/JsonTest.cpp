@@ -52,7 +52,6 @@ TEST(JsonTest, Extraction)
         JsonExtract(TestJson, "meaning_of_life", jsonInt);
         JsonExtract(TestJson, "pi", jsonDouble);
         JsonExtract(TestJson, "is_civil_war_out_yet", jsonBool);
-        JsonExtract(TestJson, "my_guid", jsonGuid);
     }
     catch (...)
     {
