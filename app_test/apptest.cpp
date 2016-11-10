@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
         return -1;
 
     VKSwapChain swapChain;
-    if (!swapChain.Initialize(app, device))
+    if (!swapChain.Initialize(wp.height, wp.width, app, device))
         return -1;
 
     VKCommandPool pool;
