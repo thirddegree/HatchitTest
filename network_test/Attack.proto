@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package Game.Combat;
+
+message Attack {
+    int32 damage = 2;
+}
