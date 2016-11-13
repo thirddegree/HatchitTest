@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        HT_DEBUG_PRINTF("Client connected!\n");
+        HT_DEBUG_PRINTF("Client[%s] connected.\n", connection->GetAddress().ToString());
     }
 
     Network::Shutdown();
