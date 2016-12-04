@@ -17,10 +17,16 @@
 #include <ht_vkswapchain.h>
 #include <ht_vkcommandpool.h>
 #include <ht_vkcommandbuffer.h>
+#include <ht_vkdebug.h>
+#include <ht_vksemaphore.h>
+#include <ht_vkfence.h>
+
 
 #include <ht_glfwwindow.h>
 #include <ht_input_singleton.h>
 #include <ht_debug.h>
+
+#include <random>
 
 using namespace Hatchit::Graphics;
 using namespace Hatchit::Graphics::Vulkan;
@@ -28,13 +34,13 @@ using namespace Hatchit::Game;
 
 int main(int argc, char* argv[])
 {
-    char test = 'B';
-    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID('Bob'));
-    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Jim"));
-    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Sally"));
-    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Bob"));
-    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Sally"));
-    HT_DEBUG_PRINTF("HASH_VALUE: %d\n", HID("Jim"));
+    /**
+     * Vulkan setup:
+     *
+     * Application instance
+     * Swapchain creation
+     *
+     */
 
     Input::Initialize();
 
@@ -55,14 +61,15 @@ int main(int argc, char* argv[])
     VKApplication app;
     if (!app.Initialize(window->NativeWindowHandle(), window->NativeDisplayHandle()))
         return -1;
-    
+
     VKDevice device;
     if (!device.Initialize(app, 0))
         return -1;
 
     VKSwapChain swapChain;
-    if (!swapChain.Initialize(wp.height, wp.width, app, device))
+    if (!swapChain.Initialize(600, 800, app, device))
         return -1;
+
 
     VKCommandPool pool;
     if (!pool.Initialize(device, swapChain.QueueFamilyIndex()))
@@ -74,9 +81,20 @@ int main(int argc, char* argv[])
     VKCommandBuffer setupCommandBuffer;
     pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1, &setupCommandBuffer);
 
-    VkCommandBufferBeginInfo bInfo = {};
-    bInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    setupCommandBuffer.Begin(&bInfo);
+    /**
+     * Create render command buffers
+     */
+    std::vector<VKCommandBuffer> renderCmdBuffers(swapChain.GetImageCount());
+    pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, swapChain.GetImageCount(), &renderCmdBuffers[0]);
+
+    setupCommandBuffer.Begin();
+
+    VKSemaphore semaphore;
+    semaphore.Initialize(device);
+
+    VKFence fence;
+    fence.Initialize(device);
+
 
     /**
     * TEST:
@@ -92,6 +110,7 @@ int main(int argc, char* argv[])
     }
 
     Input::DeInitialize();
+
 
     return 0;
 }
