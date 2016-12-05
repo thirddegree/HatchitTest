@@ -20,7 +20,7 @@
 #include <ht_vkdebug.h>
 #include <ht_vksemaphore.h>
 #include <ht_vkfence.h>
-
+#include <ht_vkdepthstencil.h>
 
 #include <ht_glfwwindow.h>
 #include <ht_input_singleton.h>
@@ -95,6 +95,8 @@ int main(int argc, char* argv[])
     VKFence fence;
     fence.Initialize(device);
 
+    VKDepthStencil ds;
+    ds.Initialize(device, 800, 600);
 
     /**
     * TEST:
