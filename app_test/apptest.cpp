@@ -28,6 +28,8 @@
 
 #include <random>
 
+#include <ht_fileresource.h>
+
 using namespace Hatchit::Graphics;
 using namespace Hatchit::Graphics::Vulkan;
 using namespace Hatchit::Game;

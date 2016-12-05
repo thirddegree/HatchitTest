@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 add_executable(RunAppTest
         apptest.cpp)
 
-target_link_libraries(RunAppTest HatchitCore HatchitGraphics HatchitGame)
+target_link_libraries(RunAppTest HatchitCore HatchitResource HatchitGraphics HatchitGame)
 
 set_target_properties(RunAppTest
 	PROPERTIES
