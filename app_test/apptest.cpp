@@ -17,22 +17,23 @@
 #include <ht_vkswapchain.h>
 #include <ht_vkcommandpool.h>
 #include <ht_vkcommandbuffer.h>
-#include <ht_vkdebug.h>
 #include <ht_vksemaphore.h>
 #include <ht_vkfence.h>
-#include <ht_vkdepthstencil.h>
 
 #include <ht_glfwwindow.h>
 #include <ht_input_singleton.h>
 #include <ht_debug.h>
-
-#include <random>
 
 #include <ht_fileresource.h>
 
 using namespace Hatchit::Graphics;
 using namespace Hatchit::Graphics::Vulkan;
 using namespace Hatchit::Game;
+
+VKApplication* g_Application;
+VKDevice*      g_Device;
+VKSwapChain*   g_SwapChain;
+VKCommandPool* g_CommandPool;
 
 int main(int argc, char* argv[])
 {
@@ -60,33 +61,32 @@ int main(int argc, char* argv[])
     if (!window->Initialize())
         return -1;
 
-    VKApplication app;
-    if (!app.Initialize(window->NativeWindowHandle(), window->NativeDisplayHandle()))
+    g_Application = new VKApplication;
+    if (!g_Application->Initialize(window->NativeWindowHandle(), window->NativeDisplayHandle()))
         return -1;
 
-    VKDevice device;
-    if (!device.Initialize(app, 0))
+    g_Device = new VKDevice;
+    if (!g_Device->Initialize(*g_Application, 0))
         return -1;
 
-    VKSwapChain swapChain;
-    if (!swapChain.Initialize(600, 800, app, device))
+    g_SwapChain = new VKSwapChain;
+    if (!g_SwapChain->Initialize(600, 800, *g_Application, *g_Device))
         return -1;
 
-
-    VKCommandPool pool;
-    if (!pool.Initialize(device, swapChain.QueueFamilyIndex()))
+    g_CommandPool = new VKCommandPool;
+    if (!g_CommandPool->Initialize(*g_Device, g_SwapChain->QueueFamilyIndex()))
         return -1;
 
     /**
     * Create Vulkan setup command buffer
-    */
+    *//*
     VKCommandBuffer setupCommandBuffer;
-    pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1, &setupCommandBuffer);
+    pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1, &setupCommandBuffer);*/
 
     /**
      * Create render command buffers
      */
-    std::vector<VKCommandBuffer> renderCmdBuffers(swapChain.GetImageCount());
+    /*std::vector<VKCommandBuffer> renderCmdBuffers(swapChain.GetImageCount());
     pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, swapChain.GetImageCount(), &renderCmdBuffers[0]);
 
     setupCommandBuffer.Begin();
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
     fence.Initialize(device);
 
     VKDepthStencil ds;
-    ds.Initialize(device, 800, 600);
+    ds.Initialize(device, 800, 600);*/
 
     /**
     * TEST:
@@ -106,12 +106,17 @@ int main(int argc, char* argv[])
     */
 
 
-    setupCommandBuffer.End();
+    //setupCommandBuffer.End();
 
     while (window->IsRunning())
     {
         window->PollEvents();
     }
+
+    delete g_CommandPool;
+    delete g_SwapChain;
+    delete g_Device;
+    delete g_Application;
 
     Input::DeInitialize();
 
