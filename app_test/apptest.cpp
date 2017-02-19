@@ -16,6 +16,8 @@
 #include <ht_vkdevice.h>
 #include <ht_vkswapchain.h>
 #include <ht_vkcommandpool.h>
+#include <ht_vkdepthstencil.h>
+#include <ht_vkrenderpass.h>
 #include <ht_vkcommandbuffer.h>
 #include <ht_vksemaphore.h>
 #include <ht_vkfence.h>
@@ -26,6 +28,8 @@
 
 #include <ht_fileresource.h>
 
+#include <array>
+
 using namespace Hatchit::Graphics;
 using namespace Hatchit::Graphics::Vulkan;
 using namespace Hatchit::Game;
@@ -34,9 +38,29 @@ VKApplication* g_Application;
 VKDevice*      g_Device;
 VKSwapChain*   g_SwapChain;
 VKCommandPool* g_CommandPool;
+VKDepthStencil* g_DepthStencil;
+VKRenderPass*  g_RenderPass;
+
+void cleanup()
+{
+    if (g_RenderPass)
+        delete g_RenderPass;
+    if (g_DepthStencil)
+        delete g_DepthStencil;
+    if (g_CommandPool)
+        delete g_CommandPool;
+    if (g_SwapChain)
+        delete g_SwapChain;
+    if (g_Device)
+        delete g_Device;
+    if (g_Application)
+        delete g_Application;
+}
 
 int main(int argc, char* argv[])
 {
+    std::atexit(cleanup);
+
     /**
      * Vulkan setup:
      *
@@ -44,6 +68,13 @@ int main(int argc, char* argv[])
      * Swapchain creation
      *
      */
+    g_Application = nullptr;
+    g_Device = nullptr;
+    g_SwapChain = nullptr;
+    g_CommandPool = nullptr;
+    g_DepthStencil = nullptr;
+    g_RenderPass = nullptr;
+
 
     Input::Initialize();
 
@@ -74,49 +105,21 @@ int main(int argc, char* argv[])
         return -1;
 
     g_CommandPool = new VKCommandPool;
-    if (!g_CommandPool->Initialize(*g_Device, g_SwapChain->QueueFamilyIndex()))
+    if (!g_CommandPool->Initialize(*g_Device))
         return -1;
 
-    /**
-    * Create Vulkan setup command buffer
-    *//*
-    VKCommandBuffer setupCommandBuffer;
-    pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, 1, &setupCommandBuffer);*/
+    g_DepthStencil = new VKDepthStencil;
+    if (!g_DepthStencil->Initialize(*g_Device, 800, 600))
+        return -1;
 
-    /**
-     * Create render command buffers
-     */
-    /*std::vector<VKCommandBuffer> renderCmdBuffers(swapChain.GetImageCount());
-    pool.AllocateCommandBuffers(VK_COMMAND_BUFFER_LEVEL_PRIMARY, swapChain.GetImageCount(), &renderCmdBuffers[0]);
-
-    setupCommandBuffer.Begin();
-
-    VKSemaphore semaphore;
-    semaphore.Initialize(device);
-
-    VKFence fence;
-    fence.Initialize(device);
-
-    VKDepthStencil ds;
-    ds.Initialize(device, 800, 600);*/
-
-    /**
-    * TEST:
-    *       Create a basic depth stencil buffer
-    */
-
-
-    //setupCommandBuffer.End();
+    g_RenderPass = new VKRenderPass;
+    if (!g_RenderPass->Initialize(*g_Device, *g_SwapChain))
+        return -1;
 
     while (window->IsRunning())
     {
         window->PollEvents();
     }
-
-    delete g_CommandPool;
-    delete g_SwapChain;
-    delete g_Device;
-    delete g_Application;
 
     Input::DeInitialize();
 
