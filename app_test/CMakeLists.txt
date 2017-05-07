@@ -1,11 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_executable(RunAppTest
-        apptest.cpp)
+if(WIN32)
 
-target_link_libraries(RunAppTest HatchitCore HatchitResource HatchitGraphics HatchitGame)
+add_executable(app_test WIN32
+        apptest.cpp ${CMAKE_SOURCE_DIR}/ThirdParty/SDL2/src/main/winrt/SDL_winrt_main_NonXAML.cpp)
 
-set_target_properties(RunAppTest
+	set_source_files_properties("${CMAKE_SOURCE_DIR}/ThirdParty/SDL2/src/main/winrt/SDL_winrt_main_NonXAML.cpp" PROPERTIES COMPILE_FLAGS /ZW)
+	
+	target_link_libraries(app_test SDL2_uwp)
+	set_target_properties(app_test PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:\"vccorlibd\" /NODEFAULTLIB:\"msvcrtd\" vccorlibd.lib msvcrtd.lib")
+	set_target_properties(app_test PROPERTIES LINK_FLAGS_RELEASE "/NODEFAULTLIB:\"vccorlib\" /NODEFAULTLIB:\"msvcrt\" vccorlib.lib msvcrt.lib")
+else()
+add_executable(app_test apptest.cpp)
+endif()
+
+
+set_target_properties(app_test
 	PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 	

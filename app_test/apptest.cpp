@@ -12,117 +12,64 @@
 **
 **/
 
-#include <ht_vkapplication.h>
-#include <ht_vkdevice.h>
-#include <ht_vkswapchain.h>
-#include <ht_vkcommandpool.h>
-#include <ht_vkdepthstencil.h>
-#include <ht_vkrenderpass.h>
-#include <ht_vkcommandbuffer.h>
-#include <ht_vksemaphore.h>
-#include <ht_vkfence.h>
+#include <SDL.h>
 
-#include <ht_glfwwindow.h>
-#include <ht_input_singleton.h>
-#include <ht_debug.h>
-
-#include <ht_fileresource.h>
-
-#include <array>
-
-using namespace Hatchit::Graphics;
-using namespace Hatchit::Graphics::Vulkan;
-using namespace Hatchit::Game;
-
-VKApplication* g_Application;
-VKDevice*      g_Device;
-VKSwapChain*   g_SwapChain;
-VKCommandPool* g_CommandPool;
-VKDepthStencil* g_DepthStencil;
-VKRenderPass*  g_RenderPass;
-
-void cleanup()
+int
+main(int argc, char *argv[])
 {
-    if (g_RenderPass)
-        delete g_RenderPass;
-    if (g_DepthStencil)
-        delete g_DepthStencil;
-    if (g_CommandPool)
-        delete g_CommandPool;
-    if (g_SwapChain)
-        delete g_SwapChain;
-    if (g_Device)
-        delete g_Device;
-    if (g_Application)
-        delete g_Application;
-}
+    SDL_Window *window;                    // Declare a pointer
 
-int main(int argc, char* argv[])
-{
-    std::atexit(cleanup);
+    SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
 
-    /**
-     * Vulkan setup:
-     *
-     * Application instance
-     * Swapchain creation
-     *
-     */
-    g_Application = nullptr;
-    g_Device = nullptr;
-    g_SwapChain = nullptr;
-    g_CommandPool = nullptr;
-    g_DepthStencil = nullptr;
-    g_RenderPass = nullptr;
+                                           // Create an application window with the following settings:
+    window = SDL_CreateWindow(
+        "An SDL2 window",                  // window title
+        SDL_WINDOWPOS_UNDEFINED,           // initial x position
+        SDL_WINDOWPOS_UNDEFINED,           // initial y position
+        640,                               // width, in pixels
+        480,                               // height, in pixels
+        SDL_WINDOW_RESIZABLE                  // flags - see below
+    );
 
-
-    Input::Initialize();
-
-    WindowParams wp = {};
-    wp.x = 0;
-    wp.y = 0;
-    wp.width = 800;
-    wp.height = 600;
-    wp.debugWindowEvents = false;
-    wp.displayFPS = false;
-    wp.displayMouse = false;
-    wp.title = "Application Test";
-
-    GLFWWindow* window = new GLFWWindow(wp);
-    if (!window->Initialize())
-        return -1;
-
-    g_Application = new VKApplication;
-    if (!g_Application->Initialize(window->NativeWindowHandle(), window->NativeDisplayHandle()))
-        return -1;
-
-    g_Device = new VKDevice;
-    if (!g_Device->Initialize(*g_Application, 0))
-        return -1;
-
-    g_SwapChain = new VKSwapChain;
-    if (!g_SwapChain->Initialize(600, 800, *g_Application, *g_Device))
-        return -1;
-
-    g_CommandPool = new VKCommandPool;
-    if (!g_CommandPool->Initialize(*g_Device))
-        return -1;
-
-    g_DepthStencil = new VKDepthStencil;
-    if (!g_DepthStencil->Initialize(*g_Device, 800, 600))
-        return -1;
-
-    g_RenderPass = new VKRenderPass;
-    if (!g_RenderPass->Initialize(*g_Device, *g_SwapChain))
-        return -1;
-
-    while (window->IsRunning())
-    {
-        window->PollEvents();
+    // Check that the window was successfully created
+    if (window == NULL) {
+        // In the case that the window could not be made...
+        printf("Could not create window: %s\n", SDL_GetError());
+        return 1;
     }
 
-    Input::DeInitialize();
+    // The window is open: could enter program loop here (see SDL_PollEvent())
 
+    //SDL_Delay(3000);  // Pause execution for 3000 milliseconds, for example
 
-    return 0;
+    bool running = true;
+    while (running)
+    {
+        SDL_Event event;
+        SDL_PollEvent(&event);
+
+        switch (event.type)
+        {
+        case SDL_WINDOWEVENT:
+        {
+            SDL_WindowEvent e = event.window;
+            switch (e.type)
+            {
+            case SDL_WINDOWEVENT_CLOSE:
+                running = false;
+                break;
+            }
+        }
+        break;
+
+        default:
+            break;
+        }
+    }
+
+    // Close and destroy the window
+    SDL_DestroyWindow(window);
+
+    // Clean up
+    SDL_Quit();
 }
