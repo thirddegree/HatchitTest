@@ -13,10 +13,24 @@
 **/
 
 #include <SDL.h>
+#include <ht_winrt_filesystem.h>
+#include <ht_debug.h>
+#include <ht_os.h>
+
+using namespace Hatchit;
+using namespace Hatchit::Core;
 
 int
 main(int argc, char *argv[])
 {
+    HT_DEBUG_PRINTF("[LOCAL_FOLDER] : %s\n", WinRT::Directory::LocalFolder());
+    HT_DEBUG_PRINTF("[LOCAL_CACHE_FOLDER] : %s\n", WinRT::Directory::LocalCacheFolder());
+    HT_DEBUG_PRINTF("[ROAMING_FOLDER] : %s\n", WinRT::Directory::RoamingFolder());
+    HT_DEBUG_PRINTF("[SHARED_LOCAL_FOLDER] : %s\n", WinRT::Directory::SharedLocalFolder());
+    HT_DEBUG_PRINTF("[TEMP_FOLDER] : %s\n", WinRT::Directory::TemporaryFolder());
+    
+    Debug::CloseOutputStream();
+
     SDL_Window *window;                    // Declare a pointer
 
     SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
