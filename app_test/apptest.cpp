@@ -12,25 +12,16 @@
 **
 **/
 
-#include <ht_winrt_filesystem.h>
-#include <ht_debug.h>
-#include <ht_os.h>
+#include <ht_winrt_application.h>
 
-#include <ppltasks.h>
+using namespace Hatchit::Runtime;
+using namespace Hatchit::Runtime::WinRT;
 
-using namespace Hatchit;
-using namespace Hatchit::Core;
-
-[Platform::MTAThread]
-int main(Platform::Array<Platform::String^>^)
+int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	HT_DEBUG_PRINTF("[LOCAL_FOLDER] : %s\n", WinRT::Directory::LocalFolder());
-	HT_DEBUG_PRINTF("[LOCAL_CACHE_FOLDER] : %s\n", WinRT::Directory::LocalCacheFolder());
-	HT_DEBUG_PRINTF("[ROAMING_FOLDER] : %s\n", WinRT::Directory::RoamingFolder());
-	HT_DEBUG_PRINTF("[SHARED_LOCAL_FOLDER] : %s\n", WinRT::Directory::SharedLocalFolder());
-	HT_DEBUG_PRINTF("[TEMP_FOLDER] : %s\n", WinRT::Directory::TemporaryFolder());
-
-	Debug::CloseOutputStream();
-	
-	return 0;
+    if (FAILED(Windows::Foundation::Initialize(RO_INIT_MULTITHREADED))) {
+        return 1;
+    }
+    
+    return InitWinRTApplication();
 }
